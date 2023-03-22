@@ -32,6 +32,10 @@ module.exports = {
             ]
         });
 
+        /* TODO: 
+        actions: change limit, change owner, self owner, mute member (?), kick member, ban member,
+        (un)lock room  
+        */
         switch (action) {
             case "name": {
                 if (!this.checkOwner(room, member)) return await interaction.editReply({
