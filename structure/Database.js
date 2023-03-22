@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const user = require("../schemas/user");
 const story = require("../schemas/story");
+const proom = require("../schemas/proom");
 
 const connectToDatabase = async (client) => {
     Log.send("[DATABASE] Connecting to Lunix database...");
@@ -42,4 +43,12 @@ const updateChapter = async (userId, chapter) => {
     await story.updateOne({ userId: userId }, { $set: { chapter: chapter } });
 }
 
-module.exports = { connectToDatabase, disconnectFromDatabase, getUser, getStory, updateStory, updateChapter };
+const getRoom = async (roomId) => {
+    const room = await proom.findOne({ roomId: roomId });
+    return room;
+}
+
+module.exports = { 
+    connectToDatabase, disconnectFromDatabase, getUser, getStory, 
+    updateStory, updateChapter, getRoom
+};
