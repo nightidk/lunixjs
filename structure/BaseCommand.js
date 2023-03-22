@@ -22,6 +22,7 @@ class BaseCommand {
         this.command = new SlashCommandBuilder()
             .setName(name)
             .setDescription(description)
+            .setDMPermission(false)
             .setDefaultMemberPermissions(permissions);
         options.forEach((v) => {
             switch (v.type) {
