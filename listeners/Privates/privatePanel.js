@@ -48,24 +48,22 @@ module.exports = {
                         Embed().setDescription("Введите новое название комнаты.")
                     ]
                 })
-                const message = interaction.channel.createMessageCollector({ filter: (m) => m.author.id === member.id && m.channelId === interaction.channel.id });
-                message.on("collect", async (m) => {
-                    message.stop();
-                    await member.voice.channel.setName(m.content).catch(() => {
-                        return interaction.followUp({
-                            embeds: [
-                                Embed().setDescription("Не удалось изменить название комнаты.")
-                            ]
-                        })
-                    })   
-                    return await interaction.followUp({
+                
+                const message = interaction.channel.awaitMessages({ max: 1, filter: (m) => m.author.id === member.id && m.channelId === interaction.channel.id })
+                member.voice.channel.setName(m.content).catch(async () => {
+                    await interaction.followUp({
+                        embeds: [
+                            Embed().setDescription("Не удалось изменить название комнаты.")
+                        ]
+                    })
+                }).then(async() => {
+                    await interaction.editReply({
                         embeds: [
                             Embed().setDescription("Название комнаты изменено.")
                         ]
-                    });
+                    })
                 })
-                
-            }
+            } break;
         }
     }
 }
