@@ -1,0 +1,23 @@
+{
+    "name": "lunix",
+    "version": "1.0.0",
+    "description": "Discord bot to XiLidex",
+    "main": "index.js",
+    "scripts": {
+        "bot": "node ."
+    },
+    "keywords": [
+        "discord",
+        "bot",
+        "discord",
+        "bot"
+    ],
+    "author": "night.",
+    "license": "ISC",
+    "dependencies": {
+        "canvas": "^2.11.0",
+        "discord.js": "^14.7.1",
+        "dotenv": "^16.0.3",
+        "mongoose": "^7.0.0"
+    }
+}
