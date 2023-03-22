@@ -38,7 +38,7 @@ class Story {
             const jsonDialog = JSON.parse(dialog.content);
             const embed = new EmbedBuilder(jsonDialog);
             //await this.nextDialog();
-            return embed;
+            return embed;``
         } catch (err) {
             Log.error(err);
             throw err;
