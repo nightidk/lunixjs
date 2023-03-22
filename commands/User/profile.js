@@ -58,13 +58,13 @@ const command = {
      */
     async execute(interaction) {
         await interaction.deferReply();
-        // const message = await interaction.editReply({
-        //     embeds: [
-        //         Embed()
-        //             .setDescription("```Производится генерация профиля... Пожалуйста, подождите.```")
-        //             .setFooter({ text: interaction.member.displayName, iconURL: interaction.member.displayAvatarURL({ dynamic: true }) })
-        //     ]
-        // })
+        const message = await interaction.editReply({
+            embeds: [
+                Embed()
+                    .setDescription("```Производится генерация профиля... Пожалуйста, подождите.```")
+                    .setFooter({ text: interaction.member.displayName, iconURL: interaction.member.displayAvatarURL({ dynamic: true }) })
+            ]
+        })
 
         const member = await interaction.guild.members.fetch({ user: interaction.options.getUser("user")?.id || interaction.user.id })
         const userDB = await getUser(member.id);
@@ -113,12 +113,8 @@ const command = {
         ctx.fill();
 
         // Send profile
-        await interaction.editReply({
-            // embeds: [
-            //     Embed()
-            //         .setImage(`attachment://profile-${interaction.user.id}.png`)
-            //         .setFooter({ text: interaction.member.displayName, iconURL: interaction.member.displayAvatarURL({ dynamic: true }) })
-            // ],
+        await message.edit({
+            embeds: [],
             files: [new AttachmentBuilder().setFile(canvas.toBuffer()).setName(`profile-${interaction.user.id}.png`)]
         })
     }
