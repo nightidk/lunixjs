@@ -17,12 +17,13 @@ class BaseCommand {
         execute,
         botPermission,
         permissions = null,
-        options = []
+        options = [],
+        dm = false
     ) {
         this.command = new SlashCommandBuilder()
             .setName(name)
             .setDescription(description)
-            .setDMPermission(false)
+            .setDMPermission(dm)
             .setDefaultMemberPermissions(permissions);
         options.forEach((v) => {
             switch (v.type) {
