@@ -30,7 +30,7 @@ module.exports = (client) => {
                     Log.send(`[CONSOLE] Added ${v} to BETA_USERS`);
                 })
             } break;
-            case "reloadCommands": {
+            case "reloadCommands": case "rcmd": {
                 client.commands.clear();
                 await require("../handlers/commands")(client);
                 Log.send("[CONSOLE] Reloaded commands.");
