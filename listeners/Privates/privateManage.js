@@ -1,4 +1,5 @@
 const { Events, VoiceState, ChannelType } = require("discord.js");
+const { createRoom, deleteRoom } = require("../../structure/Database");
 
 module.exports = {
     name: Events.VoiceStateUpdate,
@@ -12,12 +13,18 @@ module.exports = {
             const channel = await newState.guild.channels.create({
                 name: newState.member.displayName,
                 parent: newState.channel.parentId,
-                type: ChannelType.GuildVoice
+                type: ChannelType.GuildVoice,
             })
-
-            await newState.member.edit({ channel: channel });
+            try {
+                await newState.member.voice.setChannel(channel);
+                await createRoom(channel.id, newState.member.id);
+            } catch (_) {
+                await channel.delete().catch(() => {});
+                await deleteRoom(channel.id);
+            }
         }
         if (!newState.channel && oldState.channel.parentId === "975406530683867199" && oldState.channel.members.size === 0) {
+            await deleteRoom(oldState.channel?.id);
             await oldState.channel.delete();
         }
     }

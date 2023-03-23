@@ -48,7 +48,15 @@ const getRoom = async (roomId) => {
     return room;
 }
 
+const createRoom = async (roomId, ownerId) => {
+    await proom.create({ roomId: roomId, ownerId: ownerId });
+}
+
+const deleteRoom = async (roomId) => {
+    await proom.deleteOne({ roomId: roomId }).catch(() => {});
+}
+
 module.exports = { 
     connectToDatabase, disconnectFromDatabase, getUser, getStory, 
-    updateStory, updateChapter, getRoom
+    updateStory, updateChapter, getRoom, createRoom, deleteRoom
 };

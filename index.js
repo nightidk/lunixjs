@@ -2,13 +2,13 @@ require("dotenv").config();
 const { Client, IntentsBitField, Collection } = require("discord.js");
 const Logger = require("./structure/Logger");
 
-const { Guilds, GuildMembers, GuildVoiceStates, GuildMessages } =
+const { Guilds, GuildMembers, GuildVoiceStates, GuildMessages, GuildModeration, MessageContent } =
     IntentsBitField.Flags;
 
 global.Log = new Logger();
 
 const client = new Client({
-    intents: [Guilds, GuildMembers, GuildVoiceStates, GuildMessages],
+    intents: [Guilds, GuildMembers, GuildVoiceStates, GuildMessages, GuildModeration, MessageContent],
 });
 
 client.env = process.env;

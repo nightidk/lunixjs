@@ -1,22 +1,21 @@
-const { ButtonInteraction } = require("discord.js");
+const { ButtonInteraction, Events } = require("discord.js");
 const { getRoom } = require("../../structure/Database");
 const Embed = require("../../structure/Embed");
 
 module.exports = {
-    name: "interactionCreate",
+    name: Events.InteractionCreate,
     checkOwner: (room, member) => {
-        return room.owner === member.id;
+        return room.ownerId === member.id;
     },
     /**
      * 
      * @param {ButtonInteraction} interaction 
      */
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true });
         if (!interaction.isButton()) return;
-        const type = interaction.customId.split("-")[0],
-            action = interaction.customId.split("-")[1];
-        if (type !== "proom") return;
+        if (!interaction.customId.startsWith("proom")) return;
+        await interaction.deferReply({ ephemeral: true });
+        const action = interaction.customId.split("-")[1];
         const member = await interaction.guild.members.fetch(interaction.user.id).catch(() => { });
         if (!member) return;
         if (!member.voice || member.voice?.channel.parentId !== "975406530683867199")
@@ -25,7 +24,7 @@ module.exports = {
                     Embed().setDescription("Вы не находитесь в приватной комнате!")
                 ]
             });
-        const room = await getRoom(member.channel.voice.id);
+        const room = await getRoom(member.voice.channel.id);
         if (!room) return interaction.editReply({
             embeds: [
                 Embed().setDescription("Вы не находитесь в приватной комнате.")
@@ -48,21 +47,29 @@ module.exports = {
                         Embed().setDescription("Введите новое название комнаты.")
                     ]
                 })
-                
-                const message = interaction.channel.awaitMessages({ max: 1, filter: (m) => m.author.id === member.id && m.channelId === interaction.channel.id })
-                member.voice.channel.setName(m.content).catch(async () => {
-                    await interaction.followUp({
-                        embeds: [
-                            Embed().setDescription("Не удалось изменить название комнаты.")
-                        ]
+                try {
+                    const message = await interaction.channel.awaitMessages({ max: 1, filter: (m) => m.author.id === member.id && m.channelId === interaction.channel.id, time: 60000, errors: ["time"] });
+                    member.voice.channel.setName(message.first().content).then(async () => {
+                        await interaction.editReply({
+                            embeds: [
+                                Embed().setDescription("Название комнаты изменено.")
+                            ]
+                        })
+                    }).catch(async () => {
+                        await interaction.followUp({
+                            embeds: [
+                                Embed().setDescription("Не удалось изменить название комнаты.")
+                            ]
+                        })
                     })
-                }).then(async() => {
+                    await message.first().delete();
+                } catch (_) {
                     await interaction.editReply({
                         embeds: [
-                            Embed().setDescription("Название комнаты изменено.")
+                            Embed().setDescription("Время на ввод нового названия вышло.")
                         ]
                     })
-                })
+                }
             } break;
         }
     }

@@ -1,7 +1,7 @@
-const { ButtonInteraction } = require("discord.js");
+const { ButtonInteraction, Events } = require("discord.js");
 
 module.exports = {
-    name: "interactionCreate",
+    name: Events.InteractionCreate,
     /**
      * 
      * @param {ButtonInteraction} interaction 
