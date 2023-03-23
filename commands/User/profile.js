@@ -14,7 +14,7 @@ const { changeColor, hexToRgbA } = require("../../structure/Color");
 const command = {
     name: "profile",
     description: "Профиль пользователя",
-    botPermission: BOT_PERMISSIONS.BETA,
+    botPermission: BOT_PERMISSIONS.DEFAULT,
     options: [
         {
             type: COMMANDS_OPTIONS.USER_OPTION,
