@@ -40,6 +40,7 @@ class Logger {
     }
 
     send(message) {
+        message = String(message);
         console.log(message);
         if (this.channel) {
             // let key = `[]`;

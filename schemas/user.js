@@ -112,6 +112,7 @@ module.exports = model(
                 color: { type: String, required: true },
             },
             required: true
-        }
+        },
+        guild: { type: String, required: false },
     })
 );

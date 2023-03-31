@@ -22,4 +22,13 @@ const dateFormat = (seconds) => {
     return `${hours ? `${hours}ч. ` : ""}${minutes}м.`;
 }
 
-module.exports = { marryFormat, dateFormat };
+/**
+ * 
+ * @param {Date} date 
+ * @returns {String}
+ */
+const getDays = (date) => {
+    return `${Math.floor(Math.round((new Date() - new Date(date).getTime()) / 1000 / 60 / 60 / 24))}дн.`;
+}
+
+module.exports = { marryFormat, dateFormat, getDays };

@@ -28,6 +28,32 @@ const getUser = async (userId) => {
     return userDB;
 }
 
+const updateChatStats = async (userId, chatId) => {
+    let userDB = await getUser(userId);
+    userDB.stats.chatActive.all++;
+    if (userDB.stats.chatActive.d7.channels.some((channel) => channel.channelId === chatId))
+        userDB.stats.chatActive.d7.channels.map((channel) => { if (channel.channelId === chatId) channel.count++; });
+    else userDB.stats.chatActive.d7.channels.push({ channelId: chatId, count: 1 });
+    if (userDB.stats.chatActive.d14.channels.some((channel) => channel.channelId === chatId))
+        userDB.stats.chatActive.d14.channels.map((channel) => { if (channel.channelId === chatId) channel.count++; });
+    else userDB.stats.chatActive.d14.channels.push({ channelId: chatId, count: 1 });
+    userDB.stats.chatActive.d7.count++;
+    userDB.stats.chatActive.d14.count++;
+    await userDB.save();
+}
+
+const updateVoiceStats = async (userId, voiceId) => {
+    let userDB = await getUser(userId);
+    userDB.stats.voiceActive.all += 60;
+    if (userDB.stats.voiceActive.d7.channels.some((channel) => channel.channelId === voiceId));
+    else userDB.stats.voiceActive.d7.channels.push({ channelId: voiceId, count: 60 });
+    if (userDB.stats.voiceActive.d14.channels.some((channel) => channel.channelId === voiceId));
+    else userDB.stats.voiceActive.d14.channels.push({ channelId: voiceId, count: 60 });
+    userDB.stats.voiceActive.d7.count += 60;
+    userDB.stats.voiceActive.d14.count += 60;
+    await userDB.save();
+}
+
 const getStory = async (userId) => {
     if ((await story.count({ userId: userId })) == 0)
         await story.create({ userId: userId });
@@ -48,7 +74,16 @@ const getRoom = async (roomId) => {
     return room;
 }
 
+const createRoom = async (roomId, ownerId) => {
+    await proom.create({ roomId: roomId, ownerId: ownerId });
+}
+
+const deleteRoom = async (roomId) => {
+    await proom.deleteOne({ roomId: roomId }).catch(() => {});
+}
+
 module.exports = { 
     connectToDatabase, disconnectFromDatabase, getUser, getStory, 
-    updateStory, updateChapter, getRoom
+    updateStory, updateChapter, getRoom, createRoom, deleteRoom,
+    updateChatStats, updateVoiceStats
 };
