@@ -42,6 +42,18 @@ const updateChatStats = async (userId, chatId) => {
     await userDB.save();
 }
 
+const updateVoiceStats = async (userId, voiceId) => {
+    let userDB = await getUser(userId);
+    userDB.stats.voiceActive.all += 60;
+    if (userDB.stats.voiceActive.d7.channels.some((channel) => channel.channelId === voiceId));
+    else userDB.stats.voiceActive.d7.channels.push({ channelId: voiceId, count: 60 });
+    if (userDB.stats.voiceActive.d14.channels.some((channel) => channel.channelId === voiceId));
+    else userDB.stats.voiceActive.d14.channels.push({ channelId: voiceId, count: 60 });
+    userDB.stats.voiceActive.d7.count += 60;
+    userDB.stats.voiceActive.d14.count += 60;
+    await userDB.save();
+}
+
 const getStory = async (userId) => {
     if ((await story.count({ userId: userId })) == 0)
         await story.create({ userId: userId });
@@ -73,5 +85,5 @@ const deleteRoom = async (roomId) => {
 module.exports = { 
     connectToDatabase, disconnectFromDatabase, getUser, getStory, 
     updateStory, updateChapter, getRoom, createRoom, deleteRoom,
-    updateChatStats
+    updateChatStats, updateVoiceStats
 };

@@ -23,7 +23,7 @@ module.exports = {
                 await deleteRoom(channel.id);
             }
         }
-        if (!newState.channel && oldState.channel.parentId === "975406530683867199" && oldState.channel.members.size === 0) {
+        if (oldState.channelId !== "975406582760374312" && oldState.channel?.parentId === "975406530683867199" && oldState.channel?.members.size === 0) {
             await deleteRoom(oldState.channel?.id);
             await oldState.channel.delete();
         }
